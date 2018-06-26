@@ -1,0 +1,63 @@
+---
+title: "Regression Analysis Webpage"
+author: "W.C. NG"
+date: "26 June 2018"
+output: ioslides_presentation
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(shiny)
+```
+
+## Overview
+
+Regression analysis is a statistical tool which is used to investigate the relationship between the predictor and repsonse. This webpage shows how one can use this tool to understand the data better and to perform statistical prediction using linear regression analysis. 
+
+## Case Study
+
+We use mtcars dataset for this case study. A summary of data is shown at below. 
+```{r, comment=''}
+head(mtcars)
+```
+In the next slide we shows the regression analysis webpage. 
+
+## Regression Analysis: Demo
+
+```{r}
+
+sidebarPanel(
+    # Select Response
+    selectInput(inputId = "res", 
+                label = "Select Response (Y-axis):", 
+                choices = names(mtcars)),
+    # Select Predictor
+    selectInput(inputId = "pred", 
+                label = "Select Predictor (X-axis):", 
+                choices = names(mtcars)),
+    # Check if lm required
+    checkboxInput(inputId = 'lm', 
+                  label = 'Show linear regression?', 
+                  value = TRUE))
+
+mainPanel(renderPlot({
+  
+        gg <- ggplot(mtcars, aes_string(x = input$pred, y = input$res)) + 
+            geom_point() +  
+            xlab("Predictor") +
+            ylab("Response") +
+            theme(legend.title = element_blank(),
+                  axis.title.x = element_text(face="bold", size=15),
+                  axis.text.x  = element_text(vjust=0.5, size=15),
+                  axis.title.y = element_text(face="bold", size=15),
+                  axis.text.y  = element_text(vjust=0.5, size=15))  
+        if (input$lm == TRUE){ gg <- gg + geom_smooth(method = 'lm')}
+        gg }))
+```
+
+## Thank you!
+### To access the application on web: https://wc-ng.shinyapps.io/Regression_Analysis/
+### To access the source code: https://github.com/wengchiat/dp-cp
+
